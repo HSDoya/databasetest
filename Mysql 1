@@ -76,3 +76,42 @@ insert into 수강
 values('s003', 'c001', '2019-03-03',81, 82, 'B');
 insert into 수강
 values('s004', 'c002', '2018-03-05',92, 95, 'A');
+
+/*2022 11 02 
+
+create table 과목2		
+(과목번호 char(4) not null primary key,
+이름 varchar(20) not null,
+강의실 char(5) not null,
+개설학과 varchar(20) not null,
+시수 int not null);
+
+create table 학생2 
+(학번 char(4) not null,
+이름 varchar(20) not null,
+주소 varchar(50) null default '미정',
+학년 int not null,
+나이 int null,
+성별 char(1) not null,
+번호 char(13) null,
+소속학과 varchar(20) null,
+primary key(학번),
+unique(번호));
+
+create table 수강2
+(학번 char(6) not null,
+과목번호 char(4) not null,
+신청날짜 date not null,
+중간성적 int null default 0,
+기말성적 int null default 0,
+평가학점 char(1) null,
+primary key(학번, 과목번호),
+foreign key(학번) references 학생2(학번),
+foreign key(과목번호) references 과목2(과목번호));
+
+insert into 과목2(select *from 과목); 
+insert into 학생2(select *from 학생);
+insert into 수강2(select *from 수강);
+
+
+
