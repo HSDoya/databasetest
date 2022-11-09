@@ -1,0 +1,31 @@
+DELIMITER //
+create procedure InsertOrUpdateCourse(in CourseNo varchar(4), in CourseName varchar(20), CourseRoom char(3), in CourseDept varchar(20), in CourseCredit INT)
+begin declare Count int;
+select count(*) into Count from 과목 where 과목번호 = CourseNo;
+if (Count = 0) then insert 과목(과목번호, 이름, 강의실, 개설학과, 시수) values(CourseNo,CourseName,CourseRoom,CourseDept,CourseCredit);
+else update 과목 set 이름 = CourseName, 강의실 = CourseRoom, 개설학과 = CourseDept, 시수 = CourseCredit where 과목번호 = CourseNo;
+end if;
+end //
+DELIMITER ;
+
+DELIMITER //
+create procedure SelectAverageOfBestScore(in Score int, out Count int)
+begin declare noMoreData int default false;
+declare Midterm int;
+declare Final int;
+declare Best int;
+declare ScoreListCursor cursor for select 중간성적, 기말성적 from 수강;
+declare continue handler for not found set noMoredata = true;
+set Count=0;
+open ScoreListCursor;
+repeat fetch ScoreListCursor into Midterm, Final;
+ if Midterm > Final then set Best = Midterm;
+ else set Best = Final;
+ end if;
+ if(Best>= Score) then set Count = Count + 1 ;
+ end if;
+ until noMoreData end repeat;
+ close ScoreListCursor;
+ end ; 
+ //
+DELIMITER ;
