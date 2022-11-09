@@ -29,3 +29,24 @@ repeat fetch ScoreListCursor into Midterm, Final;
  end ; 
  //
 DELIMITER ;
+
+
+create table 남녀학생총수(성별 char(1) not null default 0 , 
+인원수 int not null default 0, 
+primary key (성별));
+insert into 남녀학생총수 select '남', count(*) from 학생 where 성별 = '남';
+insert into 남녀학생총수 select '여', count(*) from 학생 where 성별 = '여';
+
+select * from 학생;
+select * from 남녀학생총수;
+
+DELIMITER //
+create trigger AfterInsertStu
+after insert on 학생 for each row
+begin
+if(new.성별 = '남') then update 남녀학생총수 set 인원수 = 인원수 + 1 where 성별 = '남';
+elseif(new.성별 ='여') then update 남녀학생총수 set 인원수 = 인원수 + 1 where 성별 = '여';
+end if;
+end ; 
+ //
+DELIMITER ;
